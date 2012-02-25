@@ -27,8 +27,9 @@
 			mouseDownSpeedBooster: 3,
 			autoScroll: "",
 			autoScrollDirection: "right",
-			autoScrollingStep: 5,
+			autoScrollStep: 5,
 			autoScrollInterval: 10,
+			continuousScroll: false,
 			visibleHotSpots: "",
 			hotSpotsVisibleTime: 5,
 			startAtElementId: ""
@@ -106,7 +107,11 @@
 
 					if (el.data("scrollXPos") > 0 && el.data("enabled")) {
 						el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + (el.data("scrollXPos") * el.data("speedBooster")));
-
+						
+						if(o.continuousScroll){
+							self.continuousScrollRight();
+						}
+						
 						self._showHideHotSpots();
 					}
 
@@ -138,7 +143,7 @@
 			*****************************************/
 			// Check the mouse X position and calculate the relative X position inside the left hotspot
 			el.data("scrollingHotSpotLeft").bind("mousemove", function(e) {
-				var x = el.data("scrollingHotSpotLeft").innerWidth() - (e.pageX - el.data("motherElementOffset"));
+				var x = (this.offsetLeft + el.data("motherElementOffset") + el.data("scrollingHotSpotLeft").innerWidth()) - e.pageX;
 				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.scrollStep));
 				if (el.data("scrollXPos") === Infinity) {
 					el.data("scrollXPos", 0);
@@ -160,7 +165,11 @@
 				el.data("leftScrollInterval", setInterval(function() {
 					if (el.data("scrollXPos") > 0 && el.data("enabled")) {
 						el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - (el.data("scrollXPos") * el.data("speedBooster")));
-
+						
+						if(o.continuousScroll){
+							self.continuousScrollLeft();
+						}
+						
 						self._showHideHotSpots();
 					}
 
@@ -545,62 +554,10 @@
 							break;
 
 						case "endlessloopright":
-							// Get the width of the first element. When it has scrolled out of view,
-							// the element swapping should be executed. A true/false variable is used
-							// as a flag variable so the swapAt value doesn't have to be recalculated
-							// in each loop.
-
-							if (el.data("getNextElementWidth")) {
-								if ((o.startAtElementId.length > 0) && (el.data("startAtElementHasNotPassed"))) {
-									el.data("swapAt", $("#" + o.startAtElementId).outerWidth(true));
-									el.data("startAtElementHasNotPassed", false);
-								}
-								else {
-									el.data("swapAt", el.data("scrollableArea").children(":first").outerWidth(true));
-								}
-
-								el.data("getNextElementWidth", false);
-							}
-
-							// Do the autoscrolling
-							el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + o.autoScrollingStep);
-
-							// Check to see if the swap should be done
-							if (el.data("swapAt") <= el.data("scrollWrapper").scrollLeft()) {
-								el.data("swappedElement", el.data("scrollableArea").children(":first").detach());
-								el.data("scrollableArea").append(el.data("swappedElement"));
-								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - el.data("swappedElement").outerWidth(true));
-								el.data("getNextElementWidth", true);
-							}
+							self.continuousScrollRight();
 							break;
 						case "endlessloopleft":
-							// Get the width of the first element. When it has scrolled out of view,
-							// the element swapping should be executed. A true/false variable is used
-							// as a flag variable so the swapAt value doesn't have to be recalculated
-							// in each loop.
-
-							if (el.data("getNextElementWidth")) {
-								if ((o.startAtElementId.length > 0) && (el.data("startAtElementHasNotPassed"))) {
-									el.data("swapAt", $("#" + o.startAtElementId).outerWidth(true));
-									el.data("startAtElementHasNotPassed", false);
-								}
-								else {
-									el.data("swapAt", el.data("scrollableArea").children(":first").outerWidth(true));
-								}
-
-								el.data("getNextElementWidth", false);
-							}
-
-							// Do the autoscrolling
-							el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - o.autoScrollingStep);
-
-							// Check to see if the swap should be done
-							if (el.data("scrollWrapper").scrollLeft() === 0) {
-								el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
-								el.data("scrollableArea").prepend(el.data("swappedElement"));
-								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));
-								el.data("getNextElementWidth", true);
-							}
+							self.continuousScrollLeft();
 							break;
 						default:
 							break;
@@ -609,6 +566,68 @@
 				}
 			}, o.autoScrollInterval));
 
+		},
+		continuousScrollRight: function(){
+			var self = this, el = this.element, o = this.options;
+			
+			// Get the width of the first element. When it has scrolled out of view,
+			// the element swapping should be executed. A true/false variable is used
+			// as a flag variable so the swapAt value doesn't have to be recalculated
+			// in each loop.
+
+			if (el.data("getNextElementWidth")) {
+				if ((o.startAtElementId.length > 0) && (el.data("startAtElementHasNotPassed"))) {
+					el.data("swapAt", $("#" + o.startAtElementId).outerWidth(true));
+					el.data("startAtElementHasNotPassed", false);
+				}
+				else {
+					el.data("swapAt", el.data("scrollableArea").children(":first").outerWidth(true));
+				}
+
+				el.data("getNextElementWidth", false);
+			}
+
+			// Do the autoscrolling
+			el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + o.autoScrollStep);
+
+			// Check to see if the swap should be done
+			if (el.data("swapAt") <= el.data("scrollWrapper").scrollLeft()) {
+				el.data("swappedElement", el.data("scrollableArea").children(":first").detach());
+				el.data("scrollableArea").append(el.data("swappedElement"));
+				el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - el.data("swappedElement").outerWidth(true));
+				el.data("getNextElementWidth", true);
+			}
+		},
+		continuousScrollLeft: function(){
+			var self = this, el = this.element, o = this.options;
+			
+			// Get the width of the first element. When it has scrolled out of view,
+			// the element swapping should be executed. A true/false variable is used
+			// as a flag variable so the swapAt value doesn't have to be recalculated
+			// in each loop.
+
+			if (el.data("getNextElementWidth")) {
+				if ((o.startAtElementId.length > 0) && (el.data("startAtElementHasNotPassed"))) {
+					el.data("swapAt", $("#" + o.startAtElementId).outerWidth(true));
+					el.data("startAtElementHasNotPassed", false);
+				}
+				else {
+					el.data("swapAt", el.data("scrollableArea").children(":first").outerWidth(true));
+				}
+
+				el.data("getNextElementWidth", false);
+			}
+
+			// Do the autoscrolling
+			el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - o.autoScrollStep);
+
+			// Check to see if the swap should be done
+			if (el.data("scrollWrapper").scrollLeft() === 0) {
+				el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
+				el.data("scrollableArea").prepend(el.data("swappedElement"));
+				el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));
+				el.data("getNextElementWidth", true);
+			}
 		},
 		restoreOriginalElements: function() {
 			var self = this, el = this.element;
