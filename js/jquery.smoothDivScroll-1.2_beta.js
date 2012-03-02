@@ -103,8 +103,8 @@
 			// the relative X position inside the right hotspot
 			el.data("scrollingHotSpotRight").bind("mousemove", function(e) {
 				el.data("scrollXPos", Math.round((e.layerX / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
-				if (el.data("scrollXPos") === Infinity) {
-					el.data("scrollXPos", 0);
+				if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
+					el.data("scrollXPos", 1);
 				}
 			});
 
@@ -166,8 +166,8 @@
 				var x = el.data("hotSpotWidth") - e.layerX;
 				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
-				if (el.data("scrollXPos") === Infinity) {
-					el.data("scrollXPos", 0);
+				if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
+					el.data("scrollXPos", 1);
 				}
 
 			});
