@@ -87,8 +87,8 @@
 			el.data("scrollingHotSpotRight").bind("mousemove", function(e) {
 				var x = e.pageX - (this.offsetLeft + el.data("motherElementOffset"));
 				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.scrollStep));
-				if (el.data("scrollXPos") === Infinity) {
-					el.data("scrollXPos", 0);
+				if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
+					el.data("scrollXPos", 1);
 				}
 			});
 
@@ -145,8 +145,8 @@
 			el.data("scrollingHotSpotLeft").bind("mousemove", function(e) {
 				var x = (this.offsetLeft + el.data("motherElementOffset") + el.data("scrollingHotSpotLeft").innerWidth()) - e.pageX;
 				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.scrollStep));
-				if (el.data("scrollXPos") === Infinity) {
-					el.data("scrollXPos", 0);
+				if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
+					el.data("scrollXPos", 1);
 				}
 
 			});
