@@ -100,10 +100,10 @@
 			el.data("swappedElement", null);
 			el.data("originalElements", el.data("scrollableArea").children(o.countOnlyClass));
 			el.data("visible", true);
-			el.data("initialAjaxContentLoaded", false);
 			el.data("enabled", true);
 			el.data("scrollableAreaHeight", el.data("scrollableArea").height());
 			el.data("scrollerOffset", el.offset());
+			el.data("initialAjaxContentLoaded", false);
 
 
 			/*****************************************
@@ -298,14 +298,24 @@
 			/*****************************************
 			AUTOSCROLLING
 			*****************************************/
-			// If the user has set the option autoScroll, the scollable area will
-			// start scrolling automatically. If the content is fetched using AJAX
-			// the autoscroll is not started here but in recalculateScrollableArea.
-			// Otherwise recalculateScrollableArea won't have the time to calculate
-			// the width of the scrollable area before the autoscrolling starts.
-			if ((o.autoScrollingMode.length > 0) && !(o.hiddenOnStart) && (o.ajaxContentURL.length <= 0)) {
-				self.startAutoScrolling();
-			}
+			// The $(window).load event handler is used because the width of the 
+			// elements are not calculated properly until then, at least not in Google Chrome. 
+			// The autoscrolling
+			// is started here as well for the same reason. If the autoscrolling is
+			// not started in $(window).load, it won't start because it will interpret
+			// the scrollable areas as too short.
+			$(window).load(function () {
+				// Recalculate if it's not hidden
+				if (!(o.hiddenOnStart)) {
+					self.recalculateScrollableArea();
+				}
+
+				// Autoscrolling is active
+				if ((o.autoScrollingMode.length > 0) && !(o.hiddenOnStart)) {
+					self.startAutoScrolling();
+				}
+
+			});
 
 		},
 		/**********************************************************
@@ -712,7 +722,13 @@
 
 
 									// Recalculate the total width of the elements inside the scrollable area
-									self.recalculateScrollableArea();
+									// if it's not the initial AJAX content load. If so, it's taken care of
+									// in the $(window).load eventhandler
+									if (el.data("initialAjaxContentLoaded")) {
+										self.recalculateScrollableArea();
+									} else {
+										el.data("initialAjaxContentLoaded", true);
+									}
 
 									// Determine which hotspots to show
 									self._showHideHotSpots();
@@ -762,14 +778,20 @@
 									el.data("scrollableArea").children(":last").after(data);
 								}
 								break;
-							case "replace":
+							default:
 								// Replace the content in the scrollable area
 								el.data("scrollableArea").html(data);
 								break;
 						}
 
 						// Recalculate the total width of the elements inside the scrollable area
-						self.recalculateScrollableArea();
+						// if it's not the initial AJAX content load. If so, it's taken care of
+						// in the $(window).load eventhandler
+						if (el.data("initialAjaxContentLoaded")) {
+							self.recalculateScrollableArea();
+						} else {
+							el.data("initialAjaxContentLoaded", true);
+						}
 
 						// Determine which hotspots to show
 						self._showHideHotSpots();
@@ -788,6 +810,7 @@
 			var tempScrollableAreaWidth = 0, foundStartAtElement = false, o = this.options, el = this.element, self = this;
 
 			// Add up the total width of all the items inside the scrollable area
+
 			el.data("scrollableArea").children(o.countOnlyClass).each(function () {
 				// Check to see if the current element in the loop is the one where the scrolling should start
 				if ((o.startAtElementId.length > 0) && (($(this).attr("id")) === o.startAtElementId)) {
@@ -795,8 +818,9 @@
 					foundStartAtElement = true;
 				}
 				tempScrollableAreaWidth = tempScrollableAreaWidth + $(this).outerWidth(true);
-			});
 
+			});
+			
 			// If the element with the ID specified by startAtElementId
 			// is not found, reset it
 			if (!(foundStartAtElement)) {
@@ -810,18 +834,6 @@
 			// Move to the starting position
 			el.data("scrollWrapper").scrollLeft(el.data("startingPosition"));
 			el.data("scrollXPos", el.data("startingPosition"));
-
-			// If the content of the scrollable area is fetched using AJAX
-			// during initialization, it needs to be done here. After it has
-			// been loaded a flag variable is set to indicate that the content
-			// has been loaded already and shouldn't be loaded again
-			if (!(el.data("initialAjaxContentLoaded"))) {
-				if ((o.autoScrollingMode.length > 0) && !(o.hiddenOnStart) && (o.ajaxContentURL.length > 0)) {
-					self.startAutoScrolling();
-					el.data("initialAjaxContentLoaded", true);
-				}
-			}
-
 		},
 		/**********************************************************
 		Stopping, starting and doing the autoscrolling
