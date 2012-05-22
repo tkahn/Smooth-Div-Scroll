@@ -267,28 +267,6 @@
 			if (o.ajaxContentURL.length > 0) {
 				self.changeContent(o.ajaxContentURL, "", "html", "replace");
 			}
-			else {
-				self.recalculateScrollableArea();
-			}
-
-			// If the user wants to have visible hotspot backgrounds, 
-			// here is where it's taken care of
-			if (o.autoScrollingMode !== "always") {
-
-				switch (o.visibleHotSpotBackgrounds) {
-					case "always":
-						self.showHotSpotBackgrounds();
-						break;
-					case "onstart":
-						self.showHotSpotBackgrounds();
-						el.data("hideHotSpotBackgroundsInterval", setTimeout(function () {
-							self.hideHotSpotBackgrounds("slow");
-						}, o.hotSpotsVisibleTime));
-						break;
-					default:
-						break;
-				}
-			}
 
 			// Should it be hidden on start?
 			if (o.hiddenOnStart) {
@@ -298,14 +276,14 @@
 			/*****************************************
 			AUTOSCROLLING
 			*****************************************/
-			// The $(window).load event handler is used because the width of the 
-			// elements are not calculated properly until then, at least not in Google Chrome. 
-			// The autoscrolling
-			// is started here as well for the same reason. If the autoscrolling is
-			// not started in $(window).load, it won't start because it will interpret
-			// the scrollable areas as too short.
+			// The $(window).load event handler is used the width of the elements are not calculated
+			// properly until then, at least not in Google Chrome. The start of the autoscrolling and the
+			// setting of the hotspot backgrounds is started here as well for the same reason. 
+			// If the autoscrolling is not started in $(window).load, it won't start because it 
+			// will interpret the scrollable areas as too short.
 			$(window).load(function () {
-				// Recalculate if it's not hidden
+
+				// If scroller is not hidden, recalculate the scrollable area
 				if (!(o.hiddenOnStart)) {
 					self.recalculateScrollableArea();
 				}
@@ -313,6 +291,26 @@
 				// Autoscrolling is active
 				if ((o.autoScrollingMode.length > 0) && !(o.hiddenOnStart)) {
 					self.startAutoScrolling();
+				}
+
+				// If the user wants to have visible hotspot backgrounds, 
+				// here is where it's taken care of
+
+				if (o.autoScrollingMode !== "always") {
+
+					switch (o.visibleHotSpotBackgrounds) {
+						case "always":
+							self.showHotSpotBackgrounds();
+							break;
+						case "onstart":
+							self.showHotSpotBackgrounds();
+							el.data("hideHotSpotBackgroundsInterval", setTimeout(function () {
+								self.hideHotSpotBackgrounds("slow");
+							}, o.hotSpotsVisibleTime));
+							break;
+						default:
+							break;
+					}
 				}
 
 			});
@@ -820,7 +818,7 @@
 				tempScrollableAreaWidth = tempScrollableAreaWidth + $(this).outerWidth(true);
 
 			});
-			
+
 			// If the element with the ID specified by startAtElementId
 			// is not found, reset it
 			if (!(foundStartAtElement)) {
