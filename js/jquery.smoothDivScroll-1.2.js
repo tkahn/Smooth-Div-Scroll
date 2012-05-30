@@ -114,8 +114,8 @@
 			el.data("scrollingHotSpotRight").bind("mousemove", function (e) {
 				var x = e.pageX - (this.offsetLeft + el.data("scrollerOffset").left);
 				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
-				if (el.data("scrollXPos") === Infinity) {
-					el.data("scrollXPos", 0);
+				if (el.data("scrollXPos") === Infinity el.data("scrollXPos") < 1) {
+					el.data("scrollXPos", 1);
 				}
 			});
 
@@ -178,8 +178,8 @@
 				var x = ((this.offsetLeft + el.data("scrollerOffset").left + el.data("hotSpotWidth")) - e.pageX);
 				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
-				if (el.data("scrollXPos") === Infinity) {
-					el.data("scrollXPos", 0);
+				if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
+					el.data("scrollXPos", 1);
 				}
 
 			});
