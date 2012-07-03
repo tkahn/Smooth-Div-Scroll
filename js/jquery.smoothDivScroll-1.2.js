@@ -313,6 +313,8 @@
 					}
 				}
 
+				self._trigger("setupComplete");
+
 			});
 
 		},
