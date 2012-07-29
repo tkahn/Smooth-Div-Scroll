@@ -228,8 +228,8 @@
 			/*****************************************
 			SET UP EVENT FOR MOUSEWHEEL SCROLLING
 			*****************************************/
-			el.data("scrollableArea").mousewheel(function (event, delta) {
-				if (el.data("enabled") && o.mousewheelScrolling) {
+			el.data("scrollableArea").mousewheel(function (event, delta, deltaX, deltaY) {
+				if (el.data("enabled") && o.mousewheelScrolling && deltaX && deltaY === 0) {
 					event.preventDefault();
 
 					// Stop any ongoing autoscrolling if it's running
