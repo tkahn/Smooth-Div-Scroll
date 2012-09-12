@@ -177,6 +177,13 @@
 								self._checkContinuousSwapRight();
 							}
 						}
+					},
+					stopped: function (settings) {
+						// Stop any ongoing animations
+						el.data("scrollWrapper").stop(true, false);
+
+						// Stop any ongoing autoscrolling
+						self.stopAutoScrolling();
 					}
 				});
 			}
