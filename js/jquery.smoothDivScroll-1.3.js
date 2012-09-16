@@ -67,7 +67,7 @@
 			manualContinuousScrolling: false, // Boolean
 
 			// Autoscrolling
-			autoScrollingMode: "", // always, onStart or empty (no autoscrolling) String
+			autoScrollingMode: "", // always, onStart or empty (no auto scrolling) String
 			autoScrollingDirection: "endlessLoopRight", // right, left, backAndForth, endlessLoopRight, endlessLoopLeft String
 			autoScrollingStep: 1, // Pixels
 			autoScrollingInterval: 10, // Milliseconds
@@ -164,7 +164,7 @@
 			/*****************************************
 			SET UP EVENTS FOR TOUCH SCROLLING
 			*****************************************/
-			if (o.touchScrolling) {
+			if (o.touchScrolling && el.data("enabled")) {
 				// Use jquery.kinetic.js for touch scrolling
 				// Vertical scrolling disabled
 				el.data("scrollWrapper").kinetic({
@@ -182,7 +182,7 @@
 						// Stop any ongoing animations
 						el.data("scrollWrapper").stop(true, false);
 
-						// Stop any ongoing autoscrolling
+						// Stop any ongoing auto scrolling
 						self.stopAutoScrolling();
 					}
 				});
@@ -194,51 +194,54 @@
 			// Check the mouse X position and calculate 
 			// the relative X position inside the right hotspot
 			el.data("scrollingHotSpotRight").bind("mousemove", function (e) {
-				var x = e.pageX - (this.offsetLeft + el.data("scrollerOffset").left);
-				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
+				if (o.hotSpotScrolling) {
+					var x = e.pageX - (this.offsetLeft + el.data("scrollerOffset").left);
+					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
-				// If the position is less then 1, it's set to 1
-				if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
-					el.data("scrollXPos", 1);
+					// If the position is less then 1, it's set to 1
+					if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
+						el.data("scrollXPos", 1);
+					}
 				}
-
 			});
 
 			// Mouseover right hotspot - scrolling
 			el.data("scrollingHotSpotRight").bind("mouseover", function () {
+				if (o.hotSpotScrolling) {
+					// Stop any ongoing animations
+					el.data("scrollWrapper").stop(true, false);
 
-				// Stop any ongoing animations
-				el.data("scrollWrapper").stop(true, false);
+					// Stop any ongoing auto scrolling
+					self.stopAutoScrolling();
 
-				// Stop any ongoing autoscrolling
-				self.stopAutoScrolling();
+					// Start the scrolling interval
+					el.data("rightScrollingInterval", setInterval(function () {
+						if (el.data("scrollXPos") > 0 && el.data("enabled")) {
+							el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + (el.data("scrollXPos") * el.data("speedBooster")));
 
-				// Start the scrolling interval
-				el.data("rightScrollingInterval", setInterval(function () {
-					if (el.data("scrollXPos") > 0 && el.data("enabled")) {
-						el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + (el.data("scrollXPos") * el.data("speedBooster")));
+							if (o.manualContinuousScrolling) {
+								self._checkContinuousSwapRight();
+							}
 
-						if (o.manualContinuousScrolling) {
-							self._checkContinuousSwapRight();
+							self._showHideHotSpots();
 						}
+					}, o.hotSpotScrollingInterval));
 
-						self._showHideHotSpots();
-					}
-				}, o.hotSpotScrollingInterval));
-
-				// Callback
-				self._trigger("mouseOverRightHotSpot");
-
+					// Callback
+					self._trigger("mouseOverRightHotSpot");
+				}
 			});
 
 			// Mouseout right hotspot - stop scrolling
 			el.data("scrollingHotSpotRight").bind("mouseout", function () {
-				clearInterval(el.data("rightScrollingInterval"));
-				el.data("scrollXPos", 0);
+				if (o.hotSpotScrolling) {
+					clearInterval(el.data("rightScrollingInterval"));
+					el.data("scrollXPos", 0);
 
-				// Easing out after scrolling
-				if (o.easingAfterHotSpotScrolling && el.data("enabled")) {
-					el.data("scrollWrapper").animate({ scrollLeft: el.data("scrollWrapper").scrollLeft() + o.easingAfterHotSpotScrollingDistance }, { duration: o.easingAfterHotSpotScrollingDuration, easing: o.easingAfterHotSpotScrollingFunction });
+					// Easing out after scrolling
+					if (o.easingAfterHotSpotScrolling && el.data("enabled")) {
+						el.data("scrollWrapper").animate({ scrollLeft: el.data("scrollWrapper").scrollLeft() + o.easingAfterHotSpotScrollingDistance }, { duration: o.easingAfterHotSpotScrollingDuration, easing: o.easingAfterHotSpotScrollingFunction });
+					}
 				}
 			});
 
@@ -259,54 +262,55 @@
 			// Check the mouse X position and calculate
 			// the relative X position inside the left hotspot
 			el.data("scrollingHotSpotLeft").bind("mousemove", function (e) {
+				if (o.hotSpotScrolling) {
+					var x = ((this.offsetLeft + el.data("scrollerOffset").left + el.data("hotSpotWidth")) - e.pageX);
 
-				var x = ((this.offsetLeft + el.data("scrollerOffset").left + el.data("hotSpotWidth")) - e.pageX);
+					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
-				el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
-
-				// If the position is less then 1, it's set to 1
-				if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
-					el.data("scrollXPos", 1);
+					// If the position is less then 1, it's set to 1
+					if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
+						el.data("scrollXPos", 1);
+					}
 				}
-
 			});
 
 			// Mouseover left hotspot
 			el.data("scrollingHotSpotLeft").bind("mouseover", function () {
+				if (o.hotSpotScrolling) {
+					// Stop any ongoing animations
+					el.data("scrollWrapper").stop(true, false);
 
-				// Stop any ongoing animations
-				el.data("scrollWrapper").stop(true, false);
+					// Stop any ongoing auto scrolling
+					self.stopAutoScrolling();
 
-				// Stop any ongoing autoscrolling
-				self.stopAutoScrolling();
+					el.data("leftScrollingInterval", setInterval(function () {
+						if (el.data("scrollXPos") > 0 && el.data("enabled")) {
+							el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - (el.data("scrollXPos") * el.data("speedBooster")));
 
-				el.data("leftScrollingInterval", setInterval(function () {
-					if (el.data("scrollXPos") > 0 && el.data("enabled")) {
-						el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - (el.data("scrollXPos") * el.data("speedBooster")));
+							if (o.manualContinuousScrolling) {
+								self._checkContinuousSwapLeft();
+							}
 
-						if (o.manualContinuousScrolling) {
-							self._checkContinuousSwapLeft();
+							self._showHideHotSpots();
 						}
+					}, o.hotSpotScrollingInterval));
 
-						self._showHideHotSpots();
-					}
-				}, o.hotSpotScrollingInterval));
-
-				// Callback
-				self._trigger("mouseOverLeftHotSpot");
+					// Callback
+					self._trigger("mouseOverLeftHotSpot");
+				}
 			});
 
 			// mouseout left hotspot
 			el.data("scrollingHotSpotLeft").bind("mouseout", function () {
+				if (o.hotSpotScrolling) {
+					clearInterval(el.data("leftScrollingInterval"));
+					el.data("scrollXPos", 0);
 
-				clearInterval(el.data("leftScrollingInterval"));
-				el.data("scrollXPos", 0);
-
-				// Easing out after scrolling
-				if (o.easingAfterHotSpotScrolling && el.data("enabled")) {
-					el.data("scrollWrapper").animate({ scrollLeft: el.data("scrollWrapper").scrollLeft() - o.easingAfterHotSpotScrollingDistance }, { duration: o.easingAfterHotSpotScrollingDuration, easing: o.easingAfterHotSpotScrollingFunction });
+					// Easing out after scrolling
+					if (o.easingAfterHotSpotScrolling && el.data("enabled")) {
+						el.data("scrollWrapper").animate({ scrollLeft: el.data("scrollWrapper").scrollLeft() - o.easingAfterHotSpotScrollingDistance }, { duration: o.easingAfterHotSpotScrollingDuration, easing: o.easingAfterHotSpotScrollingFunction });
+					}
 				}
-
 			});
 
 			// mousedown left hotspot (add scrolling speed booster)
@@ -326,19 +330,19 @@
 					// Is multiplied/inverted by minus one since you want it to scroll 
 					// left when moving the wheel down/right and right when moving the wheel up/left
 					if (o.mousewheelScrolling === "vertical" && deltaY !== 0) {
-						// Stop any ongoing autoscrolling if it's running
+						// Stop any ongoing auto scrolling if it's running
 						self.stopAutoScrolling();
 						event.preventDefault();
 						pixels = Math.round((o.mousewheelScrollingStep * deltaY) * -1);
 						self.move(pixels);
 					} else if (o.mousewheelScrolling === "horizontal" && deltaX !== 0) {
-						// Stop any ongoing autoscrolling if it's running
+						// Stop any ongoing auto scrolling if it's running
 						self.stopAutoScrolling();
 						event.preventDefault();
 						pixels = Math.round((o.mousewheelScrollingStep * deltaX) * -1);
 						self.move(pixels);
 					} else if (o.mousewheelScrolling === "allDirections") {
-						// Stop any ongoing autoscrolling if it's running
+						// Stop any ongoing auto scrolling if it's running
 						self.stopAutoScrolling();
 						event.preventDefault();
 						pixels = Math.round((o.mousewheelScrollingStep * delta) * -1);
@@ -383,10 +387,10 @@
 			/*****************************************
 			AUTOSCROLLING
 			*****************************************/
-			// The $(window).load event handler is used the width of the elements are not calculated
-			// properly until then, at least not in Google Chrome. The start of the autoscrolling and the
+			// The $(window).load event handler is used because the width of the elements are not calculated
+			// properly until then, at least not in Google Chrome. The start of the auto scrolling and the
 			// setting of the hotspot backgrounds is started here as well for the same reason. 
-			// If the autoscrolling is not started in $(window).load, it won't start because it 
+			// If the auto scrolling is not started in $(window).load, it won't start because it 
 			// will interpret the scrollable areas as too short.
 			$(window).load(function () {
 
@@ -416,17 +420,23 @@
 							break;
 						case "hover":
 							el.mouseenter(function (event) {
-								event.stopPropagation();
-								self.showHotSpotBackgrounds(250);
+								if (o.hotSpotScrolling) {
+									event.stopPropagation();
+									self.showHotSpotBackgrounds(250);
+								}
 							}).mouseleave(function (event) {
-								event.stopPropagation();
-								self.hideHotSpotBackgrounds(250);
+								if (o.hotSpotScrolling) {
+									event.stopPropagation();
+									self.hideHotSpotBackgrounds(250);
+								}
 							});
 							break;
 						default:
 							break;
 					}
 				}
+
+				self._showHideHotSpots();
 
 				self._trigger("setupComplete");
 
@@ -471,7 +481,8 @@
 
 			// Alter the CSS (SmoothDivScroll.css) if you want to customize
 			// the look'n'feel of the visible hotspots
-			var self = this, el = this.element;
+			var self = this, el = this.element, o = this.option;
+
 
 			// Fade in the hotspot backgrounds
 			if (fadeSpeed !== undefined) {
@@ -497,9 +508,10 @@
 			}
 
 			self._showHideHotSpots();
+
 		},
 		hideHotSpotBackgrounds: function (fadeSpeed) {
-			var el = this.element;
+			var el = this.element, o = this.option;
 
 			// Fade out the hotspot backgrounds
 			if (fadeSpeed !== undefined) {
@@ -527,54 +539,65 @@
 		_showHideHotSpots: function () {
 			var self = this, el = this.element, o = this.options;
 
-			// If the manual scrolling is set
-			if (o.manualContinuousScrolling && o.hotSpotScrolling && o.autoScrollingMode !== "always") {
-				el.data("scrollingHotSpotLeft").show();
-				el.data("scrollingHotSpotRight").show();
-			}
-			// Autoscrolling not set to always and hotspot scrolling enabled
-			else if (o.autoScrollingMode !== "always" && o.hotSpotScrolling) {
-				// If the scrollable area is shorter than the scroll wrapper, both hotspots
-				// should be hidden
-				if (el.data("scrollableAreaWidth") <= (el.data("scrollWrapper").innerWidth())) {
-					el.data("scrollingHotSpotLeft").hide();
-					el.data("scrollingHotSpotRight").hide();
-				}
-				// When you can't scroll further left the left scroll hotspot should be hidden
-				// and the right hotspot visible.
-				else if (el.data("scrollWrapper").scrollLeft() === 0) {
-					el.data("scrollingHotSpotLeft").hide();
-					el.data("scrollingHotSpotRight").show();
-					// Callback
-					self._trigger("scrollerLeftLimitReached");
-					// Clear interval
-					clearInterval(el.data("leftScrollingInterval"));
-					el.data("leftScrollingInterval", null);
-				}
-				// When you can't scroll further right
-				// the right scroll hotspot should be hidden
-				// and the left hotspot visible
-				else if (el.data("scrollableAreaWidth") <= (el.data("scrollWrapper").innerWidth() + el.data("scrollWrapper").scrollLeft())) {
-					el.data("scrollingHotSpotLeft").show();
-					el.data("scrollingHotSpotRight").hide();
-					// Callback
-					self._trigger("scrollerRightLimitReached");
-					// Clear interval
-					clearInterval(el.data("rightScrollingInterval"));
-					el.data("rightScrollingInterval", null);
-				}
-				// If you are somewhere in the middle of your
-				// scrolling, both hotspots should be visible
-				else {
-					el.data("scrollingHotSpotLeft").show();
-					el.data("scrollingHotSpotRight").show();
-				}
-			}
-			// If autoscrolling is set to always, there should be no hotspots
-			else {
+			// Hot spot scrolling is not enabled so show no hot spots
+			if (!(o.hotSpotScrolling)) {
 				el.data("scrollingHotSpotLeft").hide();
 				el.data("scrollingHotSpotRight").hide();
+			} else {
+
+				// If the manual continuous scrolling option is set show both
+				if (o.manualContinuousScrolling && o.hotSpotScrolling && o.autoScrollingMode !== "always") {
+					el.data("scrollingHotSpotLeft").show();
+					el.data("scrollingHotSpotRight").show();
+				}
+				// Autoscrolling not set to always and hotspot scrolling enabled.
+				// Regular hot spot scrolling.
+				else if (o.autoScrollingMode !== "always" && o.hotSpotScrolling) {
+					// If the scrollable area is shorter than the scroll wrapper, both hotspots
+					// should be hidden
+					if (el.data("scrollableAreaWidth") <= (el.data("scrollWrapper").innerWidth())) {
+						el.data("scrollingHotSpotLeft").hide();
+						el.data("scrollingHotSpotRight").hide();
+					}
+					// When you can't scroll further left the left scroll hotspot should be hidden
+					// and the right hotspot visible.
+					else if (el.data("scrollWrapper").scrollLeft() === 0) {
+						el.data("scrollingHotSpotLeft").hide();
+						el.data("scrollingHotSpotRight").show();
+						// Callback
+						self._trigger("scrollerLeftLimitReached");
+						// Clear interval
+						clearInterval(el.data("leftScrollingInterval"));
+						el.data("leftScrollingInterval", null);
+					}
+					// When you can't scroll further right
+					// the right scroll hotspot should be hidden
+					// and the left hotspot visible
+					else if (el.data("scrollableAreaWidth") <= (el.data("scrollWrapper").innerWidth() + el.data("scrollWrapper").scrollLeft())) {
+						el.data("scrollingHotSpotLeft").show();
+						el.data("scrollingHotSpotRight").hide();
+						// Callback
+						self._trigger("scrollerRightLimitReached");
+						// Clear interval
+						clearInterval(el.data("rightScrollingInterval"));
+						el.data("rightScrollingInterval", null);
+					}
+					// If you are somewhere in the middle of your
+					// scrolling, both hotspots should be visible
+					else {
+						el.data("scrollingHotSpotLeft").show();
+						el.data("scrollingHotSpotRight").show();
+					}
+				}
+				// If auto scrolling is set to always, there should be no hotspots
+				else {
+					el.data("scrollingHotSpotLeft").hide();
+					el.data("scrollingHotSpotRight").hide();
+				}
 			}
+
+
+
 		},
 		// Function for calculating the scroll position of a certain element
 		_setElementScrollPosition: function (method, element) {
@@ -669,7 +692,7 @@
 			if (el.data("enabled")) {
 				// Get the position of the element to scroll to
 				if (self._setElementScrollPosition(scrollTo, element)) {
-					// Stop any ongoing autoscrolling
+					// Stop any ongoing auto scrolling
 					if (el.data("autoScrollingInterval") !== null) {
 						self.stopAutoScrolling();
 						autoscrollingWasRunning = true;
@@ -683,7 +706,7 @@
 					el.data("scrollWrapper").animate({
 						scrollLeft: el.data("scrollXPos")
 					}, { duration: o.scrollToAnimationDuration, easing: o.scrollToEasingFunction, complete: function () {
-						// If autoscrolling was running before, start it again
+						// If auto scrolling was running before, start it again
 						if (autoscrollingWasRunning) {
 							self.startAutoScrolling();
 						}
@@ -755,9 +778,8 @@
 		Adding or replacing content
 		**********************************************************/
 		/*  Arguments are:
-		flickrFeedURL - a valid URL to a Flickr feed - string
-		manipulationMethod - add or replace (default) - string
-		addWhere - first or last (default) - string
+		content - a valid URL to a Flickr feed - string
+		manipulationMethod - addFirst, addLast or replace (default) - string
 		*/
 		getFlickrContent: function (content, manipulationMethod) {
 			var self = this, el = this.element;
@@ -829,7 +851,7 @@
 									// Add the loaded content last in the scrollable area
 									el.data("scrollableArea").children(":last").after(loadedFlickrImages);
 									break;
-								case "replace":
+								default:
 									// Replace the content in the scrollable area
 									el.data("scrollableArea").html(loadedFlickrImages);
 									break;
@@ -913,7 +935,7 @@
 						// Add the loaded content last in the scrollable area
 						el.data("scrollableArea").children(":last").after(filteredContent);
 						break;
-					case "replace":
+					default:
 						// Replace the content in the scrollable area
 						el.data("scrollableArea").html(filteredContent);
 						break;
@@ -969,7 +991,7 @@
 					// Add the loaded content last in the scrollable area
 					el.data("scrollableArea").children(":last").after(filteredContent);
 					break;
-				case "replace":
+				default:
 					// Replace the content in the scrollable area
 					el.data("scrollableArea").html(filteredContent);
 					break;
@@ -1037,7 +1059,7 @@
 			return el.data("scrollWrapper").scrollLeft();
 		},
 		/**********************************************************
-		Stopping, starting and doing the autoscrolling
+		Stopping, starting and doing the auto scrolling
 		**********************************************************/
 		stopAutoScrolling: function () {
 			var self = this, el = this.element;
@@ -1074,7 +1096,7 @@
 
 					// If the scroller is not visible or
 					// if the scrollable area is shorter than the scroll wrapper
-					// any running autoscroll interval should stop.
+					// any running auto scroll interval should stop.
 					if (!(el.data("visible")) || (el.data("scrollableAreaWidth") <= (el.data("scrollWrapper").innerWidth()))) {
 						// Stop any running interval
 						clearInterval(el.data("autoScrollingInterval"));
@@ -1132,14 +1154,14 @@
 
 							case "endlessLoopRight":
 
-								// Do the autoscrolling
+								// Do the auto scrolling
 								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + o.autoScrollingStep);
 
 								self._checkContinuousSwapRight();
 								break;
 							case "endlessLoopLeft":
 
-								// Do the autoscrolling
+								// Do the auto scrolling
 								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - o.autoScrollingStep);
 
 								self._checkContinuousSwapLeft();
