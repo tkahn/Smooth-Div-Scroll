@@ -159,7 +159,6 @@
 			el.data("enabled", true);
 			el.data("scrollableAreaHeight", el.data("scrollableArea").height());
 			el.data("scrollerOffset", el.offset());
-			el.data("initialAjaxContentLoaded", false);
 
 			/*****************************************
 			SET UP EVENTS FOR TOUCH SCROLLING
@@ -858,13 +857,7 @@
 							}
 
 							// Recalculate the total width of the elements inside the scrollable area
-							// if it's not the initial AJAX content load. If so, it's taken care of
-							// in the $(window).load eventhandler
-							if (el.data("initialAjaxContentLoaded")) {
-								self.recalculateScrollableArea();
-							} else {
-								el.data("initialAjaxContentLoaded", true);
-							}
+							self.recalculateScrollableArea();
 
 							// Determine which hotspots to show
 							self._showHideHotSpots();
@@ -942,13 +935,7 @@
 				}
 
 				// Recalculate the total width of the elements inside the scrollable area
-				// if it's not the initial AJAX content load. If so, it's taken care of
-				// in the $(window).load eventhandler
-				if (el.data("initialAjaxContentLoaded")) {
-					self.recalculateScrollableArea();
-				} else {
-					el.data("initialAjaxContentLoaded", true);
-				}
+				self.recalculateScrollableArea();
 
 				// Determine which hotspots to show
 				self._showHideHotSpots();
@@ -998,14 +985,8 @@
 			}
 
 			// Recalculate the total width of the elements inside the scrollable area
-			// if it's not the initial AJAX content load. If so, it's taken care of
-			// in the $(window).load eventhandler
-			if (el.data("initialAjaxContentLoaded")) {
-				self.recalculateScrollableArea();
-			} else {
-				el.data("initialAjaxContentLoaded", true);
-			}
-
+			self.recalculateScrollableArea();
+	
 			// Determine which hotspots to show
 			self._showHideHotSpots();
 
