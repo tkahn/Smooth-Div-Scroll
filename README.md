@@ -1,6 +1,13 @@
 # jQuery Smooth Div Scroll
 Smooth Div Scroll is a jQuery plugin that scrolls content horizontally left or right. You'll find all the documentation you need at [smoothdivscroll.com](http://www.smoothdivscroll.com).
 
+## JSFiddle for testing and debugging
+I have set up a JSFiddle with a basic configuration of Smooth Div Scroll. Use it for testing different options, methods and callbacks and for debugging.
+
+[http://jsfiddle.net/tkahn/QSs3k/2/](http://jsfiddle.net/tkahn/QSs3k/2/)
+
+When posting issues it would be great if you could provide a link to a JSFiddle-page that you have forked from this demo and added your own setup and content.
+
 ## Version 1.3 - Release Notes
 The documentation at [smoothdivscroll.com](http://www.smoothdivscroll.com) has now been updated and is valid for Smooth Div Scroll version 1.3. Let me know if there's something that I've missed. If you want to know what has changed between version 1.2 and 1.3 I suggest that you read these release notes though.
 
