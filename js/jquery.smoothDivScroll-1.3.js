@@ -1095,9 +1095,7 @@
 								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + o.autoScrollingStep);
 								if (el.data("previousScrollLeft") === el.data("scrollWrapper").scrollLeft()) {
 									self._trigger("autoScrollingRightLimitReached");
-									clearInterval(el.data("autoScrollingInterval"));
-									el.data("autoScrollingInterval", null);
-									self._trigger("autoScrollingIntervalStopped");
+									self.stopAutoScrolling();
 								}
 								break;
 
@@ -1105,9 +1103,7 @@
 								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - o.autoScrollingStep);
 								if (el.data("previousScrollLeft") === el.data("scrollWrapper").scrollLeft()) {
 									self._trigger("autoScrollingLeftLimitReached");
-									clearInterval(el.data("autoScrollingInterval"));
-									el.data("autoScrollingInterval", null);
-									self._trigger("autoScrollingIntervalStopped");
+									self.stopAutoScrolling();
 								}
 								break;
 
