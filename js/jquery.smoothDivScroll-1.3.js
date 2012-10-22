@@ -48,6 +48,8 @@
 			hotSpotScrolling: true, // Boolean
 			hotSpotScrollingStep: 15, // Pixels
 			hotSpotScrollingInterval: 10, // Milliseconds
+			hotSpotSpeedRamp: true, // Boolean
+			hotSpotSpeedRampSwap: false, // Boolean
 			hotSpotMouseDownSpeedBooster: 3, // Integer
 			visibleHotSpotBackgrounds: "hover", // always, onStart, hover or empty (no visible hotspots)
 			hotSpotsVisibleTime: 5000, // Milliseconds
@@ -194,7 +196,17 @@
 			// the relative X position inside the right hotspot
 			el.data("scrollingHotSpotRight").bind("mousemove", function (e) {
 				if (o.hotSpotScrolling) {
-					var x = e.pageX - $(this).offset().left;	
+					
+					if (o.hotSpotSpeedRamp) {
+						if (o.hotSpotSpeedRampSwap) {
+							var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
+						} else {
+							var x = e.pageX - $(this).offset().left;
+						}
+					} else {
+						var x = 1
+					}
+					
 					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
 					// If the position is less then 1, it's set to 1
@@ -262,7 +274,17 @@
 			// the relative X position inside the left hotspot
 			el.data("scrollingHotSpotLeft").bind("mousemove", function (e) {
 				if (o.hotSpotScrolling) {
-					var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
+					
+					if (o.hotSpotSpeedRamp) {
+						if (o.hotSpotSpeedRampSwap) {
+							var x = e.pageX - $(this).offset().left;
+						} else {
+							var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
+						}
+					} else {
+						var x = 1
+					}
+
 					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
 					// If the position is less then 1, it's set to 1
