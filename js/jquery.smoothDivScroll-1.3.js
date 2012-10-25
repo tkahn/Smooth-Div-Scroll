@@ -463,6 +463,23 @@
 			});
 
 		},
+		
+		//When the contents of the scrollable area is changed outside the widget,
+		//the widget must be reinitilaized.
+		//This code is run every time the widget is called without arguments
+		_init: function () {
+			var self = this, el = this.element;
+
+			// Recalculate the total width of the elements inside the scrollable area
+			self.recalculateScrollableArea();
+	
+			// Determine which hotspots to show
+			self._showHideHotSpots();
+
+			// Trigger callback
+			self._trigger("initializationComplete");
+
+		},
 		/**********************************************************
 		Override _setOption and handle altered options
 		**********************************************************/
