@@ -48,6 +48,8 @@
 			hotSpotScrolling: true, // Boolean
 			hotSpotScrollingStep: 15, // Pixels
 			hotSpotScrollingInterval: 10, // Milliseconds
+			hotSpotSpeedRamp: true, // Boolean
+			hotSpotSpeedRampSwap: false, // Boolean
 			hotSpotMouseDownSpeedBooster: 3, // Integer
 			visibleHotSpotBackgrounds: "hover", // always, onStart, hover or empty (no visible hotspots)
 			hotSpotsVisibleTime: 5000, // Milliseconds
@@ -194,7 +196,17 @@
 			// the relative X position inside the right hotspot
 			el.data("scrollingHotSpotRight").bind("mousemove", function (e) {
 				if (o.hotSpotScrolling) {
-					var x = e.pageX - (this.offsetLeft + el.data("scrollerOffset").left);
+					
+					if (o.hotSpotSpeedRamp) {
+						if (o.hotSpotSpeedRampSwap) {
+							var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
+						} else {
+							var x = e.pageX - $(this).offset().left;
+						}
+					} else {
+						var x = 1
+					}
+					
 					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
 					// If the position is less then 1, it's set to 1
@@ -262,7 +274,16 @@
 			// the relative X position inside the left hotspot
 			el.data("scrollingHotSpotLeft").bind("mousemove", function (e) {
 				if (o.hotSpotScrolling) {
-					var x = ((this.offsetLeft + el.data("scrollerOffset").left + el.data("hotSpotWidth")) - e.pageX);
+					
+					if (o.hotSpotSpeedRamp) {
+						if (o.hotSpotSpeedRampSwap) {
+							var x = e.pageX - $(this).offset().left;
+						} else {
+							var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
+						}
+					} else {
+						var x = 1
+					}
 
 					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
@@ -442,6 +463,23 @@
 			});
 
 		},
+		
+		//When the contents of the scrollable area is changed outside the widget,
+		//the widget must be reinitilaized.
+		//This code is run every time the widget is called without arguments
+		_init: function () {
+			var self = this, el = this.element;
+
+			// Recalculate the total width of the elements inside the scrollable area
+			self.recalculateScrollableArea();
+	
+			// Determine which hotspots to show
+			self._showHideHotSpots();
+
+			// Trigger callback
+			self._trigger("initializationComplete");
+
+		},
 		/**********************************************************
 		Override _setOption and handle altered options
 		**********************************************************/
@@ -545,7 +583,7 @@
 			} else {
 
 				// If the manual continuous scrolling option is set show both
-				if (o.manualContinuousScrolling && o.hotSpotScrolling && o.autoScrollingMode !== "always") {
+				if (o.hotSpotScrolling && o.autoScrollingMode !== "always" && el.data("autoScrollingInterval") !== null) {
 					el.data("scrollingHotSpotLeft").show();
 					el.data("scrollingHotSpotRight").show();
 				}
@@ -1095,9 +1133,7 @@
 								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + o.autoScrollingStep);
 								if (el.data("previousScrollLeft") === el.data("scrollWrapper").scrollLeft()) {
 									self._trigger("autoScrollingRightLimitReached");
-									clearInterval(el.data("autoScrollingInterval"));
-									el.data("autoScrollingInterval", null);
-									self._trigger("autoScrollingIntervalStopped");
+									self.stopAutoScrolling();
 								}
 								break;
 
@@ -1105,9 +1141,7 @@
 								el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() - o.autoScrollingStep);
 								if (el.data("previousScrollLeft") === el.data("scrollWrapper").scrollLeft()) {
 									self._trigger("autoScrollingLeftLimitReached");
-									clearInterval(el.data("autoScrollingInterval"));
-									el.data("autoScrollingInterval", null);
-									self._trigger("autoScrollingIntervalStopped");
+									self.stopAutoScrolling();
 								}
 								break;
 
