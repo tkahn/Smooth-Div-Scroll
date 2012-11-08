@@ -43,6 +43,7 @@
 			getContentOnLoad: {}, // Object
 			countOnlyClass: "", // String
 			startAtElementId: "", // String
+			startAtElementIdMargin: 0, //Pixels
 
 			// Hotspot scrolling
 			hotSpotScrolling: true, // Boolean
@@ -1005,7 +1006,7 @@
 			el.data("scrollableArea").children(o.countOnlyClass).each(function () {
 				// Check to see if the current element in the loop is the one where the scrolling should start
 				if ((o.startAtElementId.length > 0) && (($(this).attr("id")) === o.startAtElementId)) {
-					el.data("startingPosition", tempScrollableAreaWidth);
+					el.data("startingPosition", tempScrollableAreaWidth  -  o.startAtElementIdMargin);
 					foundStartAtElement = true;
 				}
 				tempScrollableAreaWidth = tempScrollableAreaWidth + $(this).outerWidth(true);
