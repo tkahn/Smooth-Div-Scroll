@@ -743,6 +743,15 @@
 			// clear queue, move to end
 			el.data("scrollWrapper").stop(true, true);
 
+			// To avoid a "stuck" scroller when trying to move manually, attempt to make an initial swap before attempting to move
+			if (o.manualContinuousScrolling) {
+				if (pixels > 0) {
+					self._checkContinuousSwapRight();
+				} else {
+					self._checkContinuousSwapLeft();
+				}
+			}
+
 			// Only run this code if it's possible to scroll left or right,
 			if ((pixels < 0 && el.data("scrollWrapper").scrollLeft() > 0) || (pixels > 0 && el.data("scrollableAreaWidth") > (el.data("scrollWrapper").innerWidth() + el.data("scrollWrapper").scrollLeft()))) {
 				if (o.easingAfterMouseWheelScrolling) {
