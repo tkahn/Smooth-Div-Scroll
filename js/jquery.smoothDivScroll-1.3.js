@@ -1243,6 +1243,11 @@
 		enable: function () {
 			var el = this.element;
 
+			// Enable touch scrolling
+			if (this.options.touchScrolling) {
+				el.data("scrollWrapper").kinetic('attach');
+			}
+
 			// Set enabled to true
 			el.data("enabled", true);
 		},
@@ -1254,6 +1259,11 @@
 			clearInterval(el.data("rightScrollingInterval"));
 			clearInterval(el.data("leftScrollingInterval"));
 			clearInterval(el.data("hideHotSpotBackgroundsInterval"));
+
+			// Disable touch scrolling
+			if (this.options.touchScrolling) {
+				el.data("scrollWrapper").kinetic('detach');
+			}
 
 			// Set enabled to false
 			el.data("enabled", false);
