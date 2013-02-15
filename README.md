@@ -44,7 +44,7 @@ Previously there was a mix of lowercase and camel-case names. For example one of
 
 
 ### Rebuilt methods for external content loading
-In [Issue #10](https://github.com/tkahn/Smooth-Div-Scroll/issues/10) stanislaw presented two great ideas for iprovement. One of them was a new method for loading non-AJAX content into the scroller (raw HTML). Looking into this I realized that the old method, ```changeContent```, would become bloated and hard to understand. So I split the old functionality into two separate methods and added a third, new method. So if you want to add external content to the scroller use one of these three methods:
+In [Issue #10](https://github.com/tkahn/Smooth-Div-Scroll/issues/10) stanislaw presented two great ideas for improvement. One of them was a new method for loading non-AJAX content into the scroller (raw HTML). Looking into this I realized that the old method, ```changeContent```, would become bloated and hard to understand. So I split the old functionality into two separate methods and added a third, new method. So if you want to add external content to the scroller use one of these three methods:
 
 * **getFlickrContent(content, manipulationMethod)**
 
