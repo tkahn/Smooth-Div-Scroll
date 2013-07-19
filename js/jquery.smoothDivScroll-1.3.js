@@ -374,7 +374,7 @@
 			// If getContentOnLoad is present in the options, 
 			// sort out the method and parameters and get the content
 
-			if (!(jQuery.isEmptyObject(o.getContentOnLoad))) {
+			if (!($.isEmptyObject(o.getContentOnLoad))) {
 				self[o.getContentOnLoad.method](o.getContentOnLoad.content, o.getContentOnLoad.manipulationMethod, o.getContentOnLoad.addWhere, o.getContentOnLoad.filterTag);
 			}
 
