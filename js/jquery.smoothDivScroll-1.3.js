@@ -251,8 +251,8 @@
 			});
 
 			// mouseup anywhere (stop boosting the scrolling speed)
-			self._on($('body'), {
-				'mouseup': function() {
+			self._on($("body"), {
+				"mouseup": function() {
 					el.data("speedBooster", 1);	
 				}
 			});
@@ -366,7 +366,7 @@
 			SET UP EVENT FOR RESIZING THE BROWSER WINDOW
 			*****************************************/
 			self._on(window, {
-				'resize': function() {
+				"resize": function() {
 					self._showHideHotSpots();
 					self._trigger("windowResized");
 				}
