@@ -176,6 +176,9 @@
 								self._checkContinuousSwapRight();
 							}
 						}
+						
+						// Callback
+						self._trigger("touchMoved");
 					},
 					stopped: function (settings) {
 						// Stop any ongoing animations
@@ -183,6 +186,9 @@
 
 						// Stop any ongoing auto scrolling
 						self.stopAutoScrolling();
+						
+						// Callback
+						self._trigger("touchStopped");
 					}
 				});
 			}
