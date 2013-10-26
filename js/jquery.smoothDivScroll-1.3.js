@@ -43,6 +43,7 @@
 			getContentOnLoad: {}, // Object
 			countOnlyClass: "", // String
 			startAtElementId: "", // String
+			beforeEndDistance : 200, // Pixels
 
 			// Hotspot scrolling
 			hotSpotScrolling: true, // Boolean
@@ -124,14 +125,14 @@
 			// Put the right and left hot spot back into the scroller again
 			// or create them if they where not present from the beginning.
 			if (el.data("scrollingHotSpotRight").length === 0) {
-				el.prepend("<div class='" + o.scrollingHotSpotRightClass + "'></div>");
+				el.prepend("<div class='" + o.scrollingHotSpotRightClass + "'><span>&gt;</span></div>");
 				el.data("scrollingHotSpotRight", el.find("." + o.scrollingHotSpotRightClass));
 			} else {
 				el.prepend(el.data("scrollingHotSpotRight"));
 			}
 
 			if (el.data("scrollingHotSpotLeft").length === 0) {
-				el.prepend("<div class='" + o.scrollingHotSpotLeftClass + "'></div>");
+				el.prepend("<div class='" + o.scrollingHotSpotLeftClass + "'><span>&lt;</span></div>");
 				el.data("scrollingHotSpotLeft", el.find("." + o.scrollingHotSpotLeftClass));
 			} else {
 				el.prepend(el.data("scrollingHotSpotLeft"));
@@ -159,6 +160,7 @@
 			el.data("enabled", true);
 			el.data("scrollableAreaHeight", el.data("scrollableArea").height());
 			el.data("scrollerOffset", el.offset());
+			el.data("initialAjaxContentLoaded", false);
 
 			/*****************************************
 			SET UP EVENTS FOR TOUCH SCROLLING
@@ -564,7 +566,7 @@
 						el.data("scrollingHotSpotLeft").hide();
 						el.data("scrollingHotSpotRight").show();
 						// Callback
-						self._trigger("scrollerLeftLimitReached");
+						self._trigger("scrollerLeftLimitReached");						
 						// Clear interval
 						clearInterval(el.data("leftScrollingInterval"));
 						el.data("leftScrollingInterval", null);
@@ -576,7 +578,7 @@
 						el.data("scrollingHotSpotLeft").show();
 						el.data("scrollingHotSpotRight").hide();
 						// Callback
-						self._trigger("scrollerRightLimitReached");
+						self._trigger("scrollerRightLimitReached");						
 						// Clear interval
 						clearInterval(el.data("rightScrollingInterval"));
 						el.data("rightScrollingInterval", null);
@@ -586,6 +588,12 @@
 					else {
 						el.data("scrollingHotSpotLeft").show();
 						el.data("scrollingHotSpotRight").show();
+					}
+					// callback if right end is allmost reached
+					if (el.data("scrollableAreaWidth") <= (el.data("scrollWrapper").innerWidth() + o.beforeEndDistance + el.data("scrollWrapper").scrollLeft())) {
+						// Callback
+						
+						self._trigger("scrollerRightLimitSoon");	
 					}
 				}
 				// If auto scrolling is set to always, there should be no hotspots
@@ -893,7 +901,13 @@
 							}
 
 							// Recalculate the total width of the elements inside the scrollable area
-							self.recalculateScrollableArea();
+							// if it's not the initial AJAX content load. If so, it's taken care of
+							// in the $(window).load eventhandler
+							if (el.data("initialAjaxContentLoaded")) {
+								self.recalculateScrollableArea();
+							} else {
+								el.data("initialAjaxContentLoaded", true);
+							}
 
 							// Determine which hotspots to show
 							self._showHideHotSpots();
@@ -971,7 +985,13 @@
 				}
 
 				// Recalculate the total width of the elements inside the scrollable area
-				self.recalculateScrollableArea();
+				// if it's not the initial AJAX content load. If so, it's taken care of
+				// in the $(window).load eventhandler
+				if (el.data("initialAjaxContentLoaded")) {
+					self.recalculateScrollableArea();
+				} else {
+					el.data("initialAjaxContentLoaded", true);
+				}
 
 				// Determine which hotspots to show
 				self._showHideHotSpots();
@@ -1021,8 +1041,14 @@
 			}
 
 			// Recalculate the total width of the elements inside the scrollable area
-			self.recalculateScrollableArea();
-	
+			// if it's not the initial AJAX content load. If so, it's taken care of
+			// in the $(window).load eventhandler
+			if (el.data("initialAjaxContentLoaded")) {
+				self.recalculateScrollableArea();
+			} else {
+				el.data("initialAjaxContentLoaded", true);
+			}
+
 			// Determine which hotspots to show
 			self._showHideHotSpots();
 
@@ -1059,8 +1085,8 @@
 			el.data("scrollableArea").width(el.data("scrollableAreaWidth"));
 
 			// Move to the starting position
-			el.data("scrollWrapper").scrollLeft(el.data("startingPosition"));
-			el.data("scrollXPos", el.data("startingPosition"));
+			//el.data("scrollWrapper").scrollLeft(el.data("startingPosition"));
+			//el.data("scrollXPos", el.data("startingPosition"));
 		},
 		/**********************************************************
 		Get current scrolling left offset
@@ -1288,6 +1314,7 @@
 
 			// Set enabled to true
 			el.data("enabled", true);
+						
 		},
 		disable: function () {
 			var self = this, el = this.element;
@@ -1305,6 +1332,7 @@
 
 			// Set enabled to false
 			el.data("enabled", false);
+			
 		},
 		destroy: function () {
 			var self = this, el = this.element;
