@@ -744,19 +744,54 @@
 			el.data("scrollWrapper").stop(true, true);
 
 			// Only run this code if it's possible to scroll left or right,
-			if ((pixels < 0 && el.data("scrollWrapper").scrollLeft() > 0) || (pixels > 0 && el.data("scrollableAreaWidth") > (el.data("scrollWrapper").innerWidth() + el.data("scrollWrapper").scrollLeft()))) {
+			if ((pixels < 0 && el.data("scrollWrapper").scrollLeft() > 0) || (pixels > 0 && el.data("scrollableAreaWidth") > (el.data("scrollWrapper").innerWidth() + el.data("scrollWrapper").scrollLeft())) || o.manualContinuousScrolling ) {
+
+        var scrollLength = el.data("scrollableArea").width() - el.data("scrollWrapper").width();
+        var sOffset = el.data("scrollWrapper").scrollLeft() + pixels;
+
+        if( sOffset < 0 ) { // Swap last element to be the first one if scroll out of the left edge of view
+                
+            function forceSwapElementLeft(){
+              el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
+              el.data("scrollableArea").prepend(el.data("swappedElement"));
+              el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));              
+            }
+            
+            while(sOffset < 0 ){ // keep swap elements left until it has enough length for scrolling left
+              forceSwapElementLeft();
+              sOffset = el.data("scrollableArea").children(":first").outerWidth(true) + sOffset;                   
+            }
+
+        } else if( sOffset - scrollLength > 0 ){ // Swap the first element to be the last one if scroll out of the right edge of view
+           
+          function forceSwapElementRight(){            
+            el.data("swappedElement", el.data("scrollableArea").children(":first").detach());
+            el.data("scrollableArea").append(el.data("swappedElement"));
+            var wrapperLeft = el.data("scrollWrapper").scrollLeft();
+            el.data("scrollWrapper").scrollLeft(wrapperLeft - el.data("swappedElement").outerWidth(true));            
+          }
+          
+          while( sOffset - scrollLength > 0 ){ // keep swap elements right until it has enough length for scrolling right
+            forceSwapElementRight();
+            sOffset = sOffset - el.data("scrollableArea").children(":last").outerWidth(true);              
+          }
+          
+        }
+          
 				if (o.easingAfterMouseWheelScrolling) {
-					el.data("scrollWrapper").animate({ scrollLeft: el.data("scrollWrapper").scrollLeft() + pixels }, { duration: o.easingAfterMouseWheelScrollingDuration, easing: o.easingAfterMouseWheelFunction, complete: function () {
-						self._showHideHotSpots();
-						if (o.manualContinuousScrolling) {
-							if (pixels > 0) {
-								self._checkContinuousSwapRight();
-							} else {
-								self._checkContinuousSwapLeft();
-							}
-						}
-					}
-					});
+        
+          el.data("scrollWrapper").animate({ scrollLeft: el.data("scrollWrapper").scrollLeft() + pixels }, { duration: o.easingAfterMouseWheelScrollingDuration, easing: o.easingAfterMouseWheelFunction, complete: function () {
+            self._showHideHotSpots();
+            if (o.manualContinuousScrolling) {
+              if (pixels > 0) {
+                self._checkContinuousSwapRight();
+              } else {
+                self._checkContinuousSwapLeft();
+              }
+            }
+          }
+          });
+          
 				} else {
 					el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + pixels);
 					self._showHideHotSpots();
@@ -769,10 +804,11 @@
 						}
 					}
 				}
+         
+
 			}
 
-
-		},
+   },
 		/**********************************************************
 		Adding or replacing content
 		**********************************************************/
@@ -1164,7 +1200,7 @@
 			// Get the width of the first element. When it has scrolled out of view,
 			// the element swapping should be executed. A true/false variable is used
 			// as a flag variable so the swapAt value doesn't have to be recalculated
-			// in each loop.
+			// in each loop.  
 			if (el.data("getNextElementWidth")) {
 
 				if ((o.startAtElementId.length > 0) && (el.data("startAtElementHasNotPassed"))) {
@@ -1215,10 +1251,12 @@
 
 			// Check to see if the swap should be done
 			if (el.data("scrollWrapper").scrollLeft() === 0) {
+       
 				el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
 				el.data("scrollableArea").prepend(el.data("swappedElement"));
 				el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));
 				el.data("getNextElementWidth", true);
+        
 			}
 
 		},
