@@ -35,6 +35,8 @@
 			// Classes for elements added by Smooth Div Scroll
 			scrollingHotSpotLeftClass: "scrollingHotSpotLeft", // String
 			scrollingHotSpotRightClass: "scrollingHotSpotRight", // String
+			scrollingHotSpotLeftVisibleClass: "scrollingHotSpotLeftVisible", // String
+			scrollingHotSpotRightVisibleClass: "scrollingHotSpotRightVisible", // String
 			scrollableAreaClass: "scrollableArea", // String
 			scrollWrapperClass: "scrollWrapper", // String
 
@@ -494,8 +496,8 @@
 				// Before the fade-in starts, we need to make sure the opacity is zero
 				//el.data("scrollingHotSpotLeft").add(el.data("scrollingHotSpotRight")).css("opacity", "0.0");
 
-				el.data("scrollingHotSpotLeft").addClass("scrollingHotSpotLeftVisible");
-				el.data("scrollingHotSpotRight").addClass("scrollingHotSpotRightVisible");
+				el.data("scrollingHotSpotLeft").addClass(o.scrollingHotSpotLeftVisibleClass);
+				el.data("scrollingHotSpotRight").addClass(o.scrollingHotSpotRightVisibleClass);
 
 				// Fade in the hotspots
 				el.data("scrollingHotSpotLeft").add(el.data("scrollingHotSpotRight")).fadeTo(fadeSpeed, 0.35);
@@ -504,11 +506,11 @@
 			else {
 
 				// The left hotspot
-				el.data("scrollingHotSpotLeft").addClass("scrollingHotSpotLeftVisible");
+				el.data("scrollingHotSpotLeft").addClass(o.scrollingHotSpotLeftVisibleClass);
 				el.data("scrollingHotSpotLeft").removeAttr("style");
 
 				// The right hotspot
-				el.data("scrollingHotSpotRight").addClass("scrollingHotSpotRightVisible");
+				el.data("scrollingHotSpotRight").addClass(o.scrollingHotSpotRightVisibleClass);
 				el.data("scrollingHotSpotRight").removeAttr("style");
 			}
 
@@ -523,19 +525,19 @@
 
 				// Fade out the left hotspot
 				el.data("scrollingHotSpotLeft").fadeTo(fadeSpeed, 0.0, function () {
-					el.data("scrollingHotSpotLeft").removeClass("scrollingHotSpotLeftVisible");
+					el.data("scrollingHotSpotLeft").removeClass(o.scrollingHotSpotLeftVisibleClass);
 				});
 
 				// Fade out the right hotspot
 				el.data("scrollingHotSpotRight").fadeTo(fadeSpeed, 0.0, function () {
-					el.data("scrollingHotSpotRight").removeClass("scrollingHotSpotRightVisible");
+					el.data("scrollingHotSpotRight").removeClass(o.scrollingHotSpotRightVisibleClass);
 				});
 
 			}
 			// Don't fade, just hide them
 			else {
-				el.data("scrollingHotSpotLeft").removeClass("scrollingHotSpotLeftVisible").removeAttr("style");
-				el.data("scrollingHotSpotRight").removeClass("scrollingHotSpotRightVisible").removeAttr("style");
+				el.data("scrollingHotSpotLeft").removeClass(o.scrollingHotSpotLeftVisibleClass).removeAttr("style");
+				el.data("scrollingHotSpotRight").removeClass(o.scrollingHotSpotRightVisibleClass).removeAttr("style");
 			}
 
 		},
