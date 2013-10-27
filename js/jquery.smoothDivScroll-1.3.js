@@ -488,7 +488,7 @@
 
 			// Alter the CSS (SmoothDivScroll.css) if you want to customize
 			// the look'n'feel of the visible hotspots
-			var self = this, el = this.element, o = this.option;
+			var self = this, el = this.element, o = this.options;
 
 
 			// Fade in the hotspot backgrounds
