@@ -259,8 +259,10 @@
 			});
 
 			// mouseup anywhere (stop boosting the scrolling speed)
-			$("body").bind("mouseup", function () {
-				el.data("speedBooster", 1);
+			self._on($("body"), {
+				"mouseup": function() {
+					el.data("speedBooster", 1);	
+				}
 			});
 
 			/*****************************************
@@ -371,9 +373,11 @@
 			/*****************************************
 			SET UP EVENT FOR RESIZING THE BROWSER WINDOW
 			*****************************************/
-			$(window).bind("resize", function () {
-				self._showHideHotSpots();
-				self._trigger("windowResized");
+			self._on(window, {
+				"resize": function() {
+					self._showHideHotSpots();
+					self._trigger("windowResized");
+				}
 			});
 
 			/*****************************************
