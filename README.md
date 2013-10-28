@@ -5,13 +5,13 @@ Smooth Div Scroll is a jQuery plugin that scrolls content horizontally left or r
 The documentation at [smoothdivscroll.com](http://www.smoothdivscroll.com) has now been updated and is valid for Smooth Div Scroll version 1.3. Let me know if there's something that I've missed. If you want to know what has changed between version 1.2 and 1.3 I suggest that you read these release notes though.
 
 ### All external libraries have been updated
-* jQuery (1.8.1)
-* jQuery UI custom (1.8.23)
-* jquery.mousewheel (3.0.6)
+* jQuery (1.10.2)
+* jQuery UI custom (1.10.3)
+* jquery.mousewheel (3.1.4)
 
 And a new library has been added to support touch:
 
-* jquery.kinetic.js (1.5)
+* jquery.kinetic.js (1.8.2)
 
 So you need to add kinetic to your page for Smooth Div Scroll 1.3 to work:
 ```
