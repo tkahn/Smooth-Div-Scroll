@@ -1,28 +1,27 @@
 /*
  * jQuery SmoothDivScroll 1.3
  *
- * Copyright (c) 2012 Thomas Kahn
+ * Copyright (c) 2013 Thomas Kahn
  * Licensed under the GPL license.
  *
  * http://www.smoothdivscroll.com/
  *
  * Depends:
- * jquery-1.8.x.min.js
-   Please use https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js
+ * jquery-1.10.2.min.js
+   Please use https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
    ...or later
 
- * jquery.ui.widget.js
- * jquery.ui.effects.min.js
+ * jquery-ui-1.10.3.custom.min
    Make your own custom download at http://jqueryui.com/download.
    First deselect all components. Then check just "Widget" and "Effects Core".
    Download the file and put it in your javascript folder.
 
  * jquery.mousewheel.min.js
    Used for mousewheel functionality.
-   Download the latest version at http://brandonaaron.net/code/mousewheel/demos
+   Download the latest version at https://github.com/brandonaaron/jquery-mousewheel
  *
 
- * jquery.kinetic.js
+ * jquery.kinetic.min.js
    Used for scrolling by dragging, mainly used on touch devices.
    Download the latest version at https://github.com/davetayls/jquery.kinetic
  *
