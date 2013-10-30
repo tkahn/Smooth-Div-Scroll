@@ -15,7 +15,7 @@ And a new library has been added to support touch:
 
 So you need to add kinetic to your page for Smooth Div Scroll 1.3 to work:
 ```
-<script src="js/jquery.kinetic.js" type="text/javascript"></script>
+<script src="js/jquery.kinetic.min.js" type="text/javascript"></script>
 ```
 
 
