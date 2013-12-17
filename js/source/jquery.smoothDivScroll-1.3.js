@@ -517,7 +517,7 @@
 
 		},
 		hideHotSpotBackgrounds: function (fadeSpeed) {
-			var el = this.element, o = this.option;
+			var el = this.element, o = this.options;
 
 			// Fade out the hotspot backgrounds
 			if (fadeSpeed !== undefined) {
