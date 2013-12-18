@@ -201,7 +201,7 @@
 			// the relative X position inside the right hotspot
 			el.data("scrollingHotSpotRight").bind("mousemove", function (e) {
 				if (o.hotSpotScrolling) {
-					var x = e.pageX - (this.offsetLeft + el.data("scrollerOffset").left);
+					var x = e.pageX - $(this).offset().left;
 					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
 					// If the position is less then 1, it's set to 1
@@ -269,7 +269,7 @@
 			// the relative X position inside the left hotspot
 			el.data("scrollingHotSpotLeft").bind("mousemove", function (e) {
 				if (o.hotSpotScrolling) {
-					var x = ((this.offsetLeft + el.data("scrollerOffset").left + el.data("hotSpotWidth")) - e.pageX);
+					var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
 
 					el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
