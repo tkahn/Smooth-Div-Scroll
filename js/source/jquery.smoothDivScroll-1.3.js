@@ -776,7 +776,7 @@
 
         if( sOffset < 0 ) { // Swap last element to be the first one if scroll out of the left edge of view
                 
-            function forceSwapElementLeft(){
+            var forceSwapElementLeft = function(){
               el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
               el.data("scrollableArea").prepend(el.data("swappedElement"));
               el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));              
@@ -789,7 +789,7 @@
 
         } else if( sOffset - scrollLength > 0 ){ // Swap the first element to be the last one if scroll out of the right edge of view
            
-          function forceSwapElementRight(){            
+          var forceSwapElementRight = function(){            
             el.data("swappedElement", el.data("scrollableArea").children(":first").detach());
             el.data("scrollableArea").append(el.data("swappedElement"));
             var wrapperLeft = el.data("scrollWrapper").scrollLeft();
