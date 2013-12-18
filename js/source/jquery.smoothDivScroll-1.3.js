@@ -552,7 +552,7 @@
 			} else {
 
 				// If the manual continuous scrolling option is set show both
-				if (o.manualContinuousScrolling && o.hotSpotScrolling && o.autoScrollingMode !== "always") {
+				if (o.hotSpotScrolling && o.autoScrollingMode !== "always" && el.data("autoScrollingInterval") !== null) {
 					el.data("scrollingHotSpotLeft").show();
 					el.data("scrollingHotSpotRight").show();
 				}
