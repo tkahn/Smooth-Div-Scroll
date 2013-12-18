@@ -780,7 +780,7 @@
               el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
               el.data("scrollableArea").prepend(el.data("swappedElement"));
               el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));              
-            }
+            };
             
             while(sOffset < 0 ){ // keep swap elements left until it has enough length for scrolling left
               forceSwapElementLeft();
@@ -794,7 +794,7 @@
             el.data("scrollableArea").append(el.data("swappedElement"));
             var wrapperLeft = el.data("scrollWrapper").scrollLeft();
             el.data("scrollWrapper").scrollLeft(wrapperLeft - el.data("swappedElement").outerWidth(true));            
-          }
+          };
           
           while( sOffset - scrollLength > 0 ){ // keep swap elements right until it has enough length for scrolling right
             forceSwapElementRight();
