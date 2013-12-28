@@ -398,8 +398,17 @@
 			// setting of the hotspot backgrounds is started here as well for the same reason. 
 			// If the auto scrolling is not started in $(window).load, it won't start because it 
 			// will interpret the scrollable areas as too short.
-			$(window).load(function () {
+			$(window).load($.proxy(self._widthKnown, self));
+			if(o.additionalLoadEvents) {
+				//format: [{selector, event}]
+				$.each(o.additionalLoadEvents, function(i, n) {
+					$(n.selector).on(n.event, $.proxy(self._widthKnown, self));
+				});
+			}
 
+		},
+		_widthKnown: function() {
+				var o = this.options, self = this, el = this.element;
 				// If scroller is not hidden, recalculate the scrollable area
 				if (!(o.hiddenOnStart)) {
 					self.recalculateScrollableArea();
@@ -445,8 +454,6 @@
 				self._showHideHotSpots();
 
 				self._trigger("setupComplete");
-
-			});
 
 		},
 		/**********************************************************
