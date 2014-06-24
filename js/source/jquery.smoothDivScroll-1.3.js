@@ -1064,6 +1064,11 @@
 
 			// Add up the total width of all the items inside the scrollable area
 			el.data("scrollableArea").children(o.countOnlyClass).each(function () {
+				// If the current element in the loop is hidden, continue as if it doesn't exist
+				if ($(this).css("display") === "none") {
+					return true;
+				}
+				
 				// Check to see if the current element in the loop is the one where the scrolling should start
 				if ((o.startAtElementId.length > 0) && (($(this).attr("id")) === o.startAtElementId)) {
 					el.data("startingPosition", tempScrollableAreaWidth);
