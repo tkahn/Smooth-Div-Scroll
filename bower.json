@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "jquery-ui": "=1.10.3",
-    "kineticjs": "=1.8.0",
+    "jquery.kinetic": "=1.8.0",
     "jquery-mousewheel": "=3.1.4"
   }
 }
