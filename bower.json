@@ -11,7 +11,7 @@
     "url": "git://github.com/markwylde/Smooth-Div-Scroll.git"
   },
   "dependencies": {
-    "jquery-ui": "=1.10.3",
+    "jquery-ui": "=1.10.4",
     "jquery.kinetic": "=1.8.0",
     "jquery-mousewheel": "=3.1.4"
   }
