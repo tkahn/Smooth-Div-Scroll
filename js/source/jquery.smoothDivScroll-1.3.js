@@ -203,7 +203,7 @@
             el.data("scrollingHotSpotRight").bind("mousemove", function(e) {
                 if (o.hotSpotScrolling) {
                     //var x = e.pageX - $(this).offset().left;
-                    var x = 4;
+                    var x = 12;
                     el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
                     // If the position is less then 1, it's set to 1
@@ -276,7 +276,7 @@
             el.data("scrollingHotSpotLeft").bind("mousemove", function(e) {
                 if (o.hotSpotScrolling) {
                     //var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
-                    var x = 4;
+                    var x = 12;
                     el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
                     // If the position is less then 1, it's set to 1
                     if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
