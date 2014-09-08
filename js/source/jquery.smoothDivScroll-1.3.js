@@ -47,7 +47,7 @@
 
             // Hotspot scrolling
             hotSpotScrolling: true, // Boolean
-            hotSpotScrollingStep: 15, // Pixels
+            hotSpotScrollingStep: 1500, // Pixels
             hotSpotScrollingInterval: 10, // Milliseconds
             hotSpotMouseDownSpeedBooster: 3, // Integer
             visibleHotSpotBackgrounds: "hover", // always, onStart, hover or empty (no visible hotspots)
@@ -143,7 +143,7 @@
             // Create variables in the element data storage
             el.data("speedBooster", 1);
             el.data("scrollXPos", 0);
-            el.data("hotSpotWidth", el.data("scrollingHotSpotLeft").innerWidth());
+            el.data("hotSpotWidth", '300');
             el.data("scrollableAreaWidth", 0);
             el.data("startingPosition", 0);
             el.data("rightScrollingInterval", null);
@@ -203,7 +203,7 @@
             el.data("scrollingHotSpotRight").bind("mousemove", function(e) {
                 if (o.hotSpotScrolling) {
                     //var x = e.pageX - $(this).offset().left;
-                    var x = 12;
+                    var x = 1;
                     el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
 
                     // If the position is less then 1, it's set to 1
@@ -276,7 +276,8 @@
             el.data("scrollingHotSpotLeft").bind("mousemove", function(e) {
                 if (o.hotSpotScrolling) {
                     //var x = el.data("hotSpotWidth") - (e.pageX - $(this).offset().left);
-                    var x = 12;
+                    var x = 1;
+
                     el.data("scrollXPos", Math.round((x / el.data("hotSpotWidth")) * o.hotSpotScrollingStep));
                     // If the position is less then 1, it's set to 1
                     if (el.data("scrollXPos") === Infinity || el.data("scrollXPos") < 1) {
