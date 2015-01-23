@@ -72,6 +72,7 @@
 			autoScrollingDirection: "endlessLoopRight", // right, left, backAndForth, endlessLoopRight, endlessLoopLeft String
 			autoScrollingStep: 1, // Pixels
 			autoScrollingInterval: 10, // Milliseconds
+			autoScrollingPauseOnHover: false,
 
 			// Touch scrolling
 			touchScrolling: false,
@@ -160,6 +161,7 @@
 			el.data("enabled", true);
 			el.data("scrollableAreaHeight", el.data("scrollableArea").height());
 			el.data("scrollerOffset", el.offset());
+			el.data('autoscrollingWasRunning',false);
 
 			/*****************************************
 			SET UP EVENTS FOR TOUCH SCROLLING
@@ -193,6 +195,25 @@
 					}
 				});
 			}
+
+			/*****************************************
+			 SET UP EVENTS FOR AUTOSCROLL PAUSING
+			 *****************************************/
+				// Mouseover scrollWrapper
+			el.data("scrollWrapper").bind("mouseover", function () {
+				if (o.autoScrollingPauseOnHover && el.data("autoScrollingInterval") !== null) {
+					// Stop any ongoing auto scrolling
+					self.stopAutoScrolling();
+				}
+			});
+
+			// Mouseout scrollWrapper
+			el.data("scrollWrapper").bind("mouseout", function () {
+				if (o.autoScrollingPauseOnHover && el.data('autoscrollingWasRunning')) {
+					// Stop any ongoing auto scrolling
+					self.startAutoScrolling();
+				}
+			});
 
 			/*****************************************
 			SET UP EVENTS FOR SCROLLING RIGHT
@@ -1108,6 +1129,7 @@
 
 			if (el.data("autoScrollingInterval") !== null) {
 				clearInterval(el.data("autoScrollingInterval"));
+				el.data("autoscrollingWasRunning", true);
 				el.data("autoScrollingInterval", null);
 
 				// Check to see which hotspots should be active
