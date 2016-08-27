@@ -398,7 +398,7 @@
 			// setting of the hotspot backgrounds is started here as well for the same reason. 
 			// If the auto scrolling is not started in $(window).load, it won't start because it 
 			// will interpret the scrollable areas as too short.
-			$(window).load(function () {
+			$(window).on('load', function() {
 
 				// If scroller is not hidden, recalculate the scrollable area
 				if (!(o.hiddenOnStart)) {
