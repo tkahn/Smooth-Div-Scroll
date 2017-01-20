@@ -83,14 +83,14 @@
 		_create: function () {
 			var self = this, o = this.options, el = this.element;
 
-			// Create variables for any existing or not existing 
+			// Create variables for any existing or not existing
 			// scroller elements on the page.
 			el.data("scrollWrapper", el.find("." + o.scrollWrapperClass));
 			el.data("scrollingHotSpotRight", el.find("." + o.scrollingHotSpotRightClass));
 			el.data("scrollingHotSpotLeft", el.find("." + o.scrollingHotSpotLeftClass));
 			el.data("scrollableArea", el.find("." + o.scrollableAreaClass));
 
-			// Check which elements are already present on the page. 
+			// Check which elements are already present on the page.
 			// Create any elements needed by the plugin if
 			// the user hasn't already created them.
 
@@ -177,7 +177,7 @@
 								self._checkContinuousSwapRight();
 							}
 						}
-						
+
 						// Callback
 						self._trigger("touchMoved");
 					},
@@ -187,7 +187,7 @@
 
 						// Stop any ongoing auto scrolling
 						self.stopAutoScrolling();
-						
+
 						// Callback
 						self._trigger("touchStopped");
 					}
@@ -197,7 +197,7 @@
 			/*****************************************
 			SET UP EVENTS FOR SCROLLING RIGHT
 			*****************************************/
-			// Check the mouse X position and calculate 
+			// Check the mouse X position and calculate
 			// the relative X position inside the right hotspot
 			el.data("scrollingHotSpotRight").bind("mousemove", function (e) {
 				if (o.hotSpotScrolling) {
@@ -333,7 +333,7 @@
 					var pixels;
 
 					// Can be either positive or negative
-					// Is multiplied/inverted by minus one since you want it to scroll 
+					// Is multiplied/inverted by minus one since you want it to scroll
 					// left when moving the wheel down/right and right when moving the wheel up/left
 					if (o.mousewheelScrolling === "vertical" && deltaY !== 0) {
 						// Stop any ongoing auto scrolling if it's running
@@ -378,7 +378,7 @@
 			/*****************************************
 			FETCHING CONTENT ON INITIALIZATION
 			*****************************************/
-			// If getContentOnLoad is present in the options, 
+			// If getContentOnLoad is present in the options,
 			// sort out the method and parameters and get the content
 
 			if (!(jQuery.isEmptyObject(o.getContentOnLoad))) {
@@ -395,10 +395,10 @@
 			*****************************************/
 			// The $(window).load event handler is used because the width of the elements are not calculated
 			// properly until then, at least not in Google Chrome. The start of the auto scrolling and the
-			// setting of the hotspot backgrounds is started here as well for the same reason. 
-			// If the auto scrolling is not started in $(window).load, it won't start because it 
+			// setting of the hotspot backgrounds is started here as well for the same reason.
+			// If the auto scrolling is not started in $(window).load, it won't start because it
 			// will interpret the scrollable areas as too short.
-			$(window).load(function () {
+			$(window).on('load', function () {
 
 				// If scroller is not hidden, recalculate the scrollable area
 				if (!(o.hiddenOnStart)) {
@@ -410,7 +410,7 @@
 					self.startAutoScrolling();
 				}
 
-				// If the user wants to have visible hotspot backgrounds, 
+				// If the user wants to have visible hotspot backgrounds,
 				// here is where it's taken care of
 				if (o.autoScrollingMode !== "always") {
 
@@ -450,20 +450,20 @@
 
 		},
 		/**********************************************************
-		_init 
+		_init
 		**********************************************************/
 		// When the contents of the scrollable area is changed outside the widget,
 		// the widget must be reinitilaized.
 		// This code is run every time the widget is called without arguments
 		 _init: function () {
 			var self = this, el = this.element;
-		 
+
 			// Recalculate the total width of the elements inside the scrollable area
 			self.recalculateScrollableArea();
-		 
+
 			// Determine which hotspots to show
 			self._showHideHotSpots();
-		
+
 			// Trigger callback
 			self._trigger("initializationComplete");
 		},
@@ -632,7 +632,7 @@
 					el.data("scrollXPos", 0);
 					return true;
 				case "start":
-					// Check to see if there is a specified start element in the options 
+					// Check to see if there is a specified start element in the options
 					// and that the element exists in the DOM
 					if (o.startAtElementId !== "") {
 						if (el.data("scrollableArea").has("#" + o.startAtElementId)) {
@@ -775,36 +775,36 @@
         var sOffset = el.data("scrollWrapper").scrollLeft() + pixels;
 
         if( sOffset < 0 ) { // Swap last element to be the first one if scroll out of the left edge of view
-                
+
             var forceSwapElementLeft = function(){
               el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
               el.data("scrollableArea").prepend(el.data("swappedElement"));
-              el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));              
+              el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));
             };
-            
+
             while(sOffset < 0 ){ // keep swap elements left until it has enough length for scrolling left
               forceSwapElementLeft();
-              sOffset = el.data("scrollableArea").children(":first").outerWidth(true) + sOffset;                   
+              sOffset = el.data("scrollableArea").children(":first").outerWidth(true) + sOffset;
             }
 
         } else if( sOffset - scrollLength > 0 ){ // Swap the first element to be the last one if scroll out of the right edge of view
-           
-          var forceSwapElementRight = function(){            
+
+          var forceSwapElementRight = function(){
             el.data("swappedElement", el.data("scrollableArea").children(":first").detach());
             el.data("scrollableArea").append(el.data("swappedElement"));
             var wrapperLeft = el.data("scrollWrapper").scrollLeft();
-            el.data("scrollWrapper").scrollLeft(wrapperLeft - el.data("swappedElement").outerWidth(true));            
+            el.data("scrollWrapper").scrollLeft(wrapperLeft - el.data("swappedElement").outerWidth(true));
           };
-          
+
           while( sOffset - scrollLength > 0 ){ // keep swap elements right until it has enough length for scrolling right
             forceSwapElementRight();
-            sOffset = sOffset - el.data("scrollableArea").children(":last").outerWidth(true);              
+            sOffset = sOffset - el.data("scrollableArea").children(":last").outerWidth(true);
           }
-          
+
         }
-          
+
 				if (o.easingAfterMouseWheelScrolling) {
-        
+
           el.data("scrollWrapper").animate({ scrollLeft: el.data("scrollWrapper").scrollLeft() + pixels }, { duration: o.easingAfterMouseWheelScrollingDuration, easing: o.easingAfterMouseWheelFunction, complete: function () {
             self._showHideHotSpots();
             if (o.manualContinuousScrolling) {
@@ -816,7 +816,7 @@
             }
           }
           });
-          
+
 				} else {
 					el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + pixels);
 					self._showHideHotSpots();
@@ -829,7 +829,7 @@
 						}
 					}
 				}
-         
+
 
 			}
 
@@ -1047,7 +1047,7 @@
 
 			// Recalculate the total width of the elements inside the scrollable area
 			self.recalculateScrollableArea();
-	
+
 			// Determine which hotspots to show
 			self._showHideHotSpots();
 
@@ -1221,11 +1221,11 @@
 			// Get the width of the first element. When it has scrolled out of view,
 			// the element swapping should be executed. A true/false variable is used
 			// as a flag variable so the swapAt value doesn't have to be recalculated
-			// in each loop.  
+			// in each loop.
 			if (el.data("getNextElementWidth")) {
 
 				if ((o.startAtElementId.length > 0) && (el.data("startAtElementHasNotPassed"))) {
-					// If the user has set a certain element to start at, set swapAt 
+					// If the user has set a certain element to start at, set swapAt
 					// to that element width. This happens once.
 					el.data("swapAt", $("#" + o.startAtElementId).outerWidth(true));
 					el.data("startAtElementHasNotPassed", false);
@@ -1272,12 +1272,12 @@
 
 			// Check to see if the swap should be done
 			if (el.data("scrollWrapper").scrollLeft() === 0) {
-       
+
 				el.data("swappedElement", el.data("scrollableArea").children(":last").detach());
 				el.data("scrollableArea").prepend(el.data("swappedElement"));
 				el.data("scrollWrapper").scrollLeft(el.data("scrollWrapper").scrollLeft() + el.data("swappedElement").outerWidth(true));
 				el.data("getNextElementWidth", true);
-        
+
 			}
 
 		},
