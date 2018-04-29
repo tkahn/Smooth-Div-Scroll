@@ -28,6 +28,7 @@ $(document).ready(function () {
 		touchScrolling: true,
 		hotSpotScrolling: false
 	});
+});
 ```
 In order for this to work you also need to include jquery.kinetic.js on your page. As you can see I have disabled hotSpotScrolling since it's not working very well on touch devices, but you don't *need* to do that.
 
