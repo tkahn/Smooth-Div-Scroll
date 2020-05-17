@@ -79,7 +79,10 @@
 
 			// Easing for when the scrollToElement method is used
 			scrollToAnimationDuration: 1000, // Milliseconds
-			scrollToEasingFunction: "easeOutQuart" // String
+			scrollToEasingFunction: "easeOutQuart", // String
+			
+			// Filter target (used by jquery.kinetic to handle clickable events) 
+            		filterTarget: false // Boolean
 		},
 		_create: function () {
 			var self = this, o = this.options, el = this.element;
@@ -192,7 +195,8 @@
 
 						// Callback
 						self._trigger("touchStopped");
-					}
+					},
+					filterTarget: o.filterTarget
 				});
 			}
 
